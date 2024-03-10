@@ -74,8 +74,8 @@ export default function ListById() {
         <ol>
           {choices.map((choice, index) => (
             <li key={index} className="list-item m-3 p-2 bg-white">
-              <div className="mb-2 font-bold">
-                {choice.title} ({choice.year})
+              <div className="mb-2">
+                {index + 1}. {choice.title} ({choice.year})
               </div>
               <div className="btn-container flex">
                 <button
