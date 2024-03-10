@@ -20,7 +20,9 @@ export default async function Lists() {
               href={`/list/${id}`}
             >
               <strong>{title}</strong>
-              <span> {description}</span>
+              <span style={{ textAlign: "right", textWrap: "balance" }}>
+                {"" + description}
+              </span>
             </Link>
           </div>
         ))}
