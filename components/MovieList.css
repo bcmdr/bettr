@@ -1,0 +1,12 @@
+.choice {
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.selected {
+  padding: 0.5rem;
+  background-color: lightblue;
+}

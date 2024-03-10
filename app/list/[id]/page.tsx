@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormEvent } from "react";
+import MovieList from "@/components/MovieList";
 
 interface List {
   title: string;
@@ -70,6 +71,7 @@ export default function ListById() {
 
   return (
     <>
+      <MovieList />
       <form onSubmit={onSubmit} className="bg-gray-300">
         <ol>
           {choices.map((choice, index) => (
