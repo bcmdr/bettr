@@ -7,8 +7,9 @@
 }
 
 .selected {
-  padding: 0.5rem;
-  background-color: lightblue;
+  padding: 0.5rem 1rem;
+  background: white;
+  border-radius: 0.5rem;
 }
 
 .options {

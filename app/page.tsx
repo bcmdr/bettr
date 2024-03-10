@@ -1,10 +1,6 @@
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
-
-interface choice {
-  title: string;
-  year: string;
-}
+import "./page.css";
 
 export default async function Lists() {
   const supabase = createClient();
@@ -12,20 +8,20 @@ export default async function Lists() {
   console.log(lists);
   return (
     <>
-      <ul>
+      <ul className="list-topics">
         {lists?.map(({ id, title, description, choices }) => (
-          <div key={id}>
-            <Link href={`/list/${id}`}>
-              {title} - {description}
+          <div className="topic" key={id}>
+            <Link
+              style={{
+                display: "flex",
+                gap: "1.5rem",
+                justifyContent: "space-between",
+              }}
+              href={`/list/${id}`}
+            >
+              <strong>{title}</strong>
+              <span> {description}</span>
             </Link>
-
-            <ol>
-              {choices.map((choice: choice, key: any) => (
-                <li key={key}>
-                  {choice.title} ({choice.year})
-                </li>
-              ))}
-            </ol>
           </div>
         ))}
       </ul>
