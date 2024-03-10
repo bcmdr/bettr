@@ -4,7 +4,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormEvent } from "react";
-import MovieList from "@/components/MovieList";
+import ChoiceList from "@/components/ChoiceList";
 
 interface List {
   title: string;
@@ -15,6 +15,8 @@ interface List {
 interface Choice {
   title: string;
   year: string;
+  selected: boolean;
+  rank: number;
 }
 
 export default function ListById() {
@@ -37,6 +39,18 @@ export default function ListById() {
       const result = data?.[0] as List;
       setList(result);
       setChoices(result.choices);
+
+      // const formattedChoices: Choice[] = [];
+      // for (let choice of result.choices) {
+      //   formattedChoices.push({
+      //     title: choice.title,
+      //     year: choice.year,
+      //     rank: -1,
+      //     selected: false,
+      //   });
+      // }
+
+      // setChoices(formattedChoices);
     };
 
     getList();
@@ -71,8 +85,18 @@ export default function ListById() {
 
   return (
     <>
-      <MovieList />
-      <form onSubmit={onSubmit} className="bg-gray-300">
+      <h1>{list.title}</h1>
+      <ChoiceList
+        choices={choices.map((choice) => {
+          return {
+            title: choice.title,
+            year: choice.year,
+            rank: -1,
+            selected: false,
+          };
+        })}
+      />
+      {/* <form onSubmit={onSubmit} className="bg-gray-300">
         <ol>
           {choices.map((choice, index) => (
             <li key={index} className="list-item m-3 p-2 bg-white">
@@ -100,7 +124,7 @@ export default function ListById() {
         </ol>
         <input type="text" name="name" />
         <button type="submit">Submit</button>
-      </form>
+      </form> */}
     </>
   );
 }

@@ -10,3 +10,8 @@
   padding: 0.5rem;
   background-color: lightblue;
 }
+
+.options {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
