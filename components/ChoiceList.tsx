@@ -58,6 +58,7 @@ const ChoiceList = (props: Props) => {
       newChoices[index].rank++;
     }
     setChoices(newChoices);
+    saveList();
   };
 
   const updateRanks = () => {
