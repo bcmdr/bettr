@@ -6,14 +6,20 @@
 }
 
 .header {
+  min-width: 50vw;
   color: white;
   background: black;
   padding: 1rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: flex-start;
   gap: 1rem;
   border-radius: 0.5rem 0.5rem 0rem 0rem;
+}
+
+.header > div:last-child {
+  margin-left: auto;
+  text-align: right;
 }
 
 h2 {
@@ -26,6 +32,6 @@ summary.header {
   @apply text-sm;
 }
 
-details[open] summary.header {
+details[open] summary {
   border-radius: 0.5rem 0.5rem 0rem 0rem;
 }
