@@ -16,7 +16,7 @@ export default async function Lists() {
   console.log(lists);
   return (
     <>
-      <section className="p-3">
+      <section className="p-3 mt-3">
         <p className="text-center">
           Select a List. Choose Items. Rank Your Choices.
         </p>
