@@ -7,8 +7,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Bettr - Rank the Best",
-  description: "Vote On Your Favourites and Make Your Opinion Known",
+  title: "QuibList – Rank the Best",
+  description: "Choose Your Favourite Items From These Lists",
 };
 
 export default function RootLayout({
