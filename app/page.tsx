@@ -1,6 +1,14 @@
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import "./page.css";
+import ChoiceList from "@/components/ChoiceList";
+
+interface Choice {
+  title: string;
+  year: string;
+  selected: boolean;
+  rank: number;
+}
 
 export default async function Lists() {
   const supabase = createClient();
@@ -9,23 +17,37 @@ export default async function Lists() {
   return (
     <>
       <ul className="list-topics">
-        {lists?.map(({ id, title, description, choices }) => (
-          <div className="topic" key={id}>
-            <Link
-              style={{
-                display: "flex",
-                gap: "1.5rem",
-                justifyContent: "space-between",
-              }}
-              href={`/list/${id}`}
-            >
-              <strong>{title}</strong>
-              <span style={{ textAlign: "right", textWrap: "balance" }}>
-                {"" + description}
-              </span>
-            </Link>
-          </div>
-        ))}
+        {lists
+          ?.sort((a, b) =>
+            new Date(a.created_at) > new Date(b.created_at) ? 1 : -1
+          )
+          .map(({ id, title, description, choices }) => (
+            <li className="">
+              <details className="topic">
+                <summary className="header" key={id}>
+                  <div>
+                    <h2>{title}</h2>
+                    <p>{"" + description}</p>
+                  </div>
+                  <div>
+                    <Link href={`/list/${id}`}>Go &gt;</Link>
+                  </div>
+                </summary>
+
+                <ChoiceList
+                  id={id}
+                  choices={choices.map((choice: Choice) => {
+                    return {
+                      title: choice.title,
+                      year: choice.year,
+                      rank: -1,
+                      selected: false,
+                    };
+                  })}
+                />
+              </details>
+            </li>
+          ))}
       </ul>
     </>
   );

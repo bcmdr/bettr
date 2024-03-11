@@ -1,12 +1,15 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FormEvent } from "react";
 import ChoiceList from "@/components/ChoiceList";
+import "../../page.css";
 
 interface List {
+  id: string;
   title: string;
   description: string;
   choices: Array<Choice>;
@@ -23,6 +26,7 @@ export default function ListById() {
   const searchParams = useParams();
   const idToSearch = searchParams.id;
   const [list, setList] = useState<List>({
+    id: "",
     title: "",
     description: "",
     choices: [],
@@ -85,46 +89,30 @@ export default function ListById() {
 
   return (
     <>
-      <h1>{list.title}</h1>
-      <ChoiceList
-        choices={choices.map((choice) => {
-          return {
-            title: choice.title,
-            year: choice.year,
-            rank: -1,
-            selected: false,
-          };
-        })}
-      />
-      {/* <form onSubmit={onSubmit} className="bg-gray-300">
-        <ol>
-          {choices.map((choice, index) => (
-            <li key={index} className="list-item m-3 p-2 bg-white">
-              <div className="mb-2">
-                {index + 1}. {choice.title} ({choice.year})
-              </div>
-              <div className="btn-container flex">
-                <button
-                  className="btn flex-grow"
-                  type="button"
-                  onClick={() => moveItem(index, "up")}
-                >
-                  Better
-                </button>
-                <button
-                  className="btn flex-grow"
-                  type="button"
-                  onClick={() => moveItem(index, "down")}
-                >
-                  Worse
-                </button>
-              </div>
-            </li>
-          ))}
-        </ol>
-        <input type="text" name="name" />
-        <button type="submit">Submit</button>
-      </form> */}
+      {list.choices.length > 0 && (
+        <div className="topic">
+          <header className="header">
+            <div>
+              <h2>{list.title}</h2>
+              <p className="text-sm">{list.description}</p>
+            </div>
+            <Link className="text-sm" href="/">
+              &lt; Back
+            </Link>
+          </header>
+          <ChoiceList
+            id={list.id}
+            choices={list.choices.map((choice) => {
+              return {
+                title: choice.title,
+                year: choice.year,
+                rank: -1,
+                selected: false,
+              };
+            })}
+          />
+        </div>
+      )}
     </>
   );
 }

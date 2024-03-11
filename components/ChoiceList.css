@@ -1,18 +1,37 @@
 .choice {
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
 }
 
+.title {
+  cursor: pointer;
+}
+
 .selected {
-  padding: 0.5rem 1rem;
   background: white;
-  border-radius: 0.5rem;
+  background-color: lightblue;
+  padding: 1rem;
+  padding-top: 0rem;
+  font-weight: bold;
+}
+
+.selected:first-child {
+   padding-top: 1rem;
+}
+
+.choice:not(.selected) {
+  margin: 0.5rem 0rem;
 }
 
 .options {
   flex-grow: 0;
   flex-shrink: 0;
+}
+
+.select {
+  color: rgba(0,0,0,0.5);
+  cursor: pointer;
 }

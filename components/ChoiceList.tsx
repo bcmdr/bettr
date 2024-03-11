@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import "./ChoiceList.css";
 
@@ -10,26 +12,35 @@ interface Choice {
 
 interface Props {
   choices: Choice[];
+  id: string;
 }
 
 const ChoiceList = (props: Props) => {
   const [choices, setChoices] = useState(props.choices);
+
   useEffect(() => {
-    if (props.choices) {
-      setChoices(props.choices);
-    }
+    const localChoices =
+      typeof window !== undefined && window?.localStorage?.getItem(props.id)
+        ? JSON.parse(localStorage.getItem(props.id) || "")
+        : props.choices;
+    setChoices(localChoices);
   }, [props.choices]);
+
+  const saveList = () => {
+    localStorage.setItem(props.id, JSON.stringify(choices));
+  };
 
   const toggleSelect = (index: number) => {
     const newChoices = [...choices];
-    if (
-      !newChoices[index].selected === false &&
-      !confirm("Deselect this choice?")
-    )
-      return;
+    // if (
+    //   !newChoices[index].selected === false
+    //   // && !confirm("Deselect this choice?")
+    // )
+    //   return;
     newChoices[index].selected = !newChoices[index].selected;
     setChoices(newChoices);
     updateRanks();
+    saveList();
   };
 
   const moveRank = (index: number, direction: "up" | "down") => {
@@ -75,12 +86,12 @@ const ChoiceList = (props: Props) => {
               key={index}
               className={`choice ${choice.selected && "selected"}`}
             >
-              <span onClick={() => toggleSelect(index)}>
+              <span className="title" onClick={() => toggleSelect(index)}>
                 {choice.selected && `${choice.rank}. `}
                 {choice.title}
                 {choice.year && ` (${choice.year})`}
               </span>
-              {choice.selected && (
+              {choice.selected ? (
                 <div className="options">
                   <button
                     className={`btn`}
@@ -94,6 +105,10 @@ const ChoiceList = (props: Props) => {
                   >
                     Worse
                   </button>
+                </div>
+              ) : (
+                <div onClick={() => toggleSelect(index)} className="select">
+                  Select
                 </div>
               )}
             </li>
