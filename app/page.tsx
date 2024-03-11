@@ -17,7 +17,7 @@ export default async function Lists() {
   return (
     <>
       <section className="p-3 mt-3 text-center">
-        <h1 className="font-bold text-xl">ListUp</h1>
+        <h1 className="font-bold text-xl">QuibList</h1>
         <p>
           Select a List. Choose Items.
           <br />
