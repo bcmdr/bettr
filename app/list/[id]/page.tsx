@@ -91,13 +91,13 @@ export default function ListById() {
     <>
       {list.choices.length > 0 && (
         <div className="topic">
-          <header className="header sticky top-0">
+          <header className="header">
             <div>
               <h2>{list.title}</h2>
               <p className="text-sm">{list.description}</p>
             </div>
             <Link className="text-sm" href="/">
-              &lt; Back
+              &larr; Back
             </Link>
           </header>
           <ChoiceList

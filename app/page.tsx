@@ -16,8 +16,9 @@ export default async function Lists() {
   console.log(lists);
   return (
     <>
-      <section className="p-3 mt-3">
-        <p className="text-center">
+      <section className="p-3 mt-3 text-center">
+        <h1 className="font-bold text-xl">ListUp</h1>
+        <p>
           Select a List. Choose Items.
           <br />
           Rank Your Choices.
@@ -32,13 +33,13 @@ export default async function Lists() {
             .map(({ id, title, description, choices }) => (
               <li key={id} className="">
                 <details className="topic">
-                  <summary className="header sticky top-0" key={id}>
+                  <summary className="header" key={id}>
                     <div>
                       <h2>{title}</h2>
                       <p>{"" + description}</p>
                     </div>
                     <div>
-                      <Link href={`/list/${id}`}>Go &gt;</Link>
+                      <Link href={`/list/${id}`}>Go &rarr;</Link>
                     </div>
                   </summary>
 

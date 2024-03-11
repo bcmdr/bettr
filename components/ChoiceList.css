@@ -11,8 +11,6 @@
 }
 
 .selected {
-  background: white;
-  background-color: lightblue;
   padding: 1rem;
   padding-top: 0rem;
   font-weight: bold;
@@ -34,4 +32,18 @@
 .select {
   color: rgba(0,0,0,0.5);
   cursor: pointer;
+}
+
+.options .btn {
+  @apply border border-black text-sm py-1 px-2;
+  color: rgba(0,0,0,0.8);
+}
+
+.options .btn:first-child {
+  border-radius: 0.3rem 0rem 0rem 0.3rem;
+}
+
+.options .btn:last-child {
+  border-left: 0px;
+  border-radius: 0rem 0.3rem 0.3rem 0rem;
 }
