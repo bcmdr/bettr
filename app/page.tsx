@@ -17,7 +17,9 @@ export default async function Lists() {
   return (
     <>
       <section className="p-3">
-        <p>Select a List. Choose Items. Rank Your Choices.</p>
+        <p className="text-center">
+          Select a List. Choose Items. Rank Your Choices.
+        </p>
       </section>
       <section>
         <ul className="list-topics">
