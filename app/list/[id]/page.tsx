@@ -91,7 +91,7 @@ export default function ListById() {
     <>
       {list.choices.length > 0 && (
         <div className="topic">
-          <header className="header">
+          <header className="header sticky top-0">
             <div>
               <h2>{list.title}</h2>
               <p className="text-sm">{list.description}</p>

@@ -22,9 +22,9 @@ export default async function Lists() {
             new Date(a.created_at) > new Date(b.created_at) ? 1 : -1
           )
           .map(({ id, title, description, choices }) => (
-            <li className="">
+            <li key={id} className="">
               <details className="topic">
-                <summary className="header" key={id}>
+                <summary className="header sticky top-0" key={id}>
                   <div>
                     <h2>{title}</h2>
                     <p>{"" + description}</p>
