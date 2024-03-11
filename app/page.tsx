@@ -18,7 +18,9 @@ export default async function Lists() {
     <>
       <section className="p-3 mt-3">
         <p className="text-center">
-          Select a List. Choose Items. Rank Your Choices.
+          Select a List. Choose Items.
+          <br />
+          Rank Your Choices.
         </p>
       </section>
       <section>
