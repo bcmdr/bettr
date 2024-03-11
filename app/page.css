@@ -17,7 +17,7 @@
   border-radius: 0.5rem 0.5rem 0rem 0rem;
 }
 
-.header > div:last-child {
+.header > *:last-child {
   margin-left: auto;
   text-align: right;
 }
