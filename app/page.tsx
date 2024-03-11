@@ -16,39 +16,44 @@ export default async function Lists() {
   console.log(lists);
   return (
     <>
-      <ul className="list-topics">
-        {lists
-          ?.sort((a, b) =>
-            new Date(a.created_at) > new Date(b.created_at) ? 1 : -1
-          )
-          .map(({ id, title, description, choices }) => (
-            <li key={id} className="">
-              <details className="topic">
-                <summary className="header sticky top-0" key={id}>
-                  <div>
-                    <h2>{title}</h2>
-                    <p>{"" + description}</p>
-                  </div>
-                  <div>
-                    <Link href={`/list/${id}`}>Go &gt;</Link>
-                  </div>
-                </summary>
+      <section className="p-3">
+        <p>Select a List. Choose Items. Rank Your Choices.</p>
+      </section>
+      <section>
+        <ul className="list-topics">
+          {lists
+            ?.sort((a, b) =>
+              new Date(a.created_at) > new Date(b.created_at) ? 1 : -1
+            )
+            .map(({ id, title, description, choices }) => (
+              <li key={id} className="">
+                <details className="topic">
+                  <summary className="header sticky top-0" key={id}>
+                    <div>
+                      <h2>{title}</h2>
+                      <p>{"" + description}</p>
+                    </div>
+                    <div>
+                      <Link href={`/list/${id}`}>Go &gt;</Link>
+                    </div>
+                  </summary>
 
-                <ChoiceList
-                  id={id}
-                  choices={choices.map((choice: Choice) => {
-                    return {
-                      title: choice.title,
-                      year: choice.year,
-                      rank: -1,
-                      selected: false,
-                    };
-                  })}
-                />
-              </details>
-            </li>
-          ))}
-      </ul>
+                  <ChoiceList
+                    id={id}
+                    choices={choices.map((choice: Choice) => {
+                      return {
+                        title: choice.title,
+                        year: choice.year,
+                        rank: -1,
+                        selected: false,
+                      };
+                    })}
+                  />
+                </details>
+              </li>
+            ))}
+        </ul>
+      </section>
     </>
   );
 }
