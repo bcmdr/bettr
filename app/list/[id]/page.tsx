@@ -4,7 +4,6 @@ import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FormEvent } from "react";
 import ChoiceList from "@/components/ChoiceList";
 import "../../page.css";
 
@@ -23,8 +22,8 @@ interface Choice {
 }
 
 export default function ListById() {
-  const searchParams = useParams();
-  const idToSearch = searchParams.id;
+  const params = useParams();
+  const idToSearch = params.id;
   const [list, setList] = useState<List>({
     id: "",
     title: "",
@@ -32,6 +31,7 @@ export default function ListById() {
     choices: [],
   });
   const [choices, setChoices] = useState<Choice[]>([]);
+  const [choicesToSubmit, setChoicesToSubmit] = useState<Choice[]>([]);
   const supabase = createClient();
 
   useEffect(() => {
@@ -43,36 +43,39 @@ export default function ListById() {
       const result = data?.[0] as List;
       setList(result);
       setChoices(result.choices);
-
-      // const formattedChoices: Choice[] = [];
-      // for (let choice of result.choices) {
-      //   formattedChoices.push({
-      //     title: choice.title,
-      //     year: choice.year,
-      //     rank: -1,
-      //     selected: false,
-      //   });
-      // }
-
-      // setChoices(formattedChoices);
     };
 
     getList();
+
+    const getSubs = async () => {
+      if (!window.location.hash) return;
+      const { data } = await supabase
+        .from("subs")
+        .select()
+        .eq("tag", window.location.hash);
+      console.log(data);
+    };
+
+    getSubs();
   }, []);
 
-  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
+    if (!list.id) return;
+    if (choicesToSubmit.length <= 0) return;
+    let tag = prompt("Leaderboard Tag?")?.trim();
+    let name = prompt("Username?")?.trim();
 
-    const formData = new FormData(event.currentTarget);
-    console.log(formData);
-    // const response = await fetch("/api/submit", {
-    //   method: "POST",
-    //   body: formData,
-    // });
+    if (tag && tag?.length <= 0) return;
+    if (name && name?.length <= 0) console.log(choicesToSubmit);
 
-    // // Handle response if necessary
-    // const data = await response.json();
-    // // ...
+    const { error } = await supabase.from("subs").insert({
+      created_by: name,
+      list_id: list.id,
+      choices: choices,
+      name_tag: name + "_" + tag,
+      tag: `#${tag}`,
+      votes: 1,
+    });
   };
 
   const moveItem = (index: number, direction: string) => {
@@ -87,18 +90,30 @@ export default function ListById() {
     }
   };
 
+  const handleSave = (choices: Choice[]) => {
+    setChoicesToSubmit(choices);
+  };
+
   return (
     <>
       {list.choices.length > 0 && (
         <div className="topic">
           <header className="header">
+            <Link className="text-sm" href="/">
+              &larr; Back
+            </Link>
             <div>
               <h2>{list.title}</h2>
               <p className="text-sm">{list.description}</p>
             </div>
-            <Link className="text-sm" href="/">
-              &larr; Back
-            </Link>
+            <button
+              className="btn"
+              onClick={() => {
+                handleSubmit();
+              }}
+            >
+              Submit
+            </button>
           </header>
           <ChoiceList
             id={list.id}
@@ -110,6 +125,7 @@ export default function ListById() {
                 selected: false,
               };
             })}
+            onSave={handleSave}
           />
         </div>
       )}

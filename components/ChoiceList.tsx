@@ -13,6 +13,7 @@ interface Choice {
 interface Props {
   choices: Choice[];
   id: string;
+  onSave: Function;
 }
 
 const ChoiceList = (props: Props) => {
@@ -27,6 +28,7 @@ const ChoiceList = (props: Props) => {
   }, [props.choices]);
 
   const saveList = () => {
+    props.onSave(choices);
     localStorage.setItem(props.id, JSON.stringify(choices));
   };
 

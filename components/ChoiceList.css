@@ -39,6 +39,10 @@
   cursor: pointer;
 }
 
+.header > .btn {
+  @apply border border-white px-3 py-1 rounded;
+}
+
 .options .btn {
   @apply border border-black text-sm py-1 px-2;
   color: rgba(0,0,0,0.8);
