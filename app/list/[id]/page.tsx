@@ -25,7 +25,6 @@ interface Sub {
   created_by: string;
   list_id: string;
   choices: Choice[];
-  name_tag: string;
   tag: string;
   votes: number;
 }
@@ -88,14 +87,11 @@ export default function ListById() {
       created_by: name,
       list_id: list.id,
       choices: choicesToSubmit.current,
-      name_tag: name + "_" + tagToSubmit,
       tag: `${tagToSubmit}`,
       votes: 1,
     };
 
     const { error } = await supabase.from("subs").insert(subToInsert);
-
-    setSubs([...subs, subToInsert]);
 
     if (error) {
       console.error(error);
@@ -104,7 +100,12 @@ export default function ListById() {
           "Score for this user and tag already exists, please submit with a different username"
         );
       }
+      return;
     }
+
+    setSubs([...subs, subToInsert]);
+    setTag(tagToSubmit);
+    window.location.hash = tagToSubmit;
   };
 
   const handleSave = (choices: Choice[]) => {
