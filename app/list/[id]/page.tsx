@@ -45,6 +45,18 @@ export default function ListById() {
 
   const supabase = createClient();
 
+  const getSubs = async () => {
+    if (!window.location.hash) return;
+    setTag(window.location.hash);
+    const { data } = await supabase
+      .from("subs")
+      .select()
+      .eq("tag", window.location.hash)
+      .eq("list_id", idToSearch);
+    console.log(data);
+    setSubs(data as Sub[]);
+  };
+
   useEffect(() => {
     const getList = async () => {
       const { data } = await supabase
@@ -57,19 +69,6 @@ export default function ListById() {
     };
 
     getList();
-
-    const getSubs = async () => {
-      if (!window.location.hash) return;
-      setTag(window.location.hash);
-      const { data } = await supabase
-        .from("subs")
-        .select()
-        .eq("tag", window.location.hash)
-        .eq("list_id", idToSearch);
-      console.log(data);
-      setSubs(data as Sub[]);
-    };
-
     getSubs();
   }, []);
 
@@ -159,14 +158,18 @@ export default function ListById() {
         {subs?.map((sub, index) => {
           return (
             <div key={index}>
-              <h3>{sub.created_by}</h3>
-              <ChoiceList
-                id={list.id}
-                choices={sub.choices.filter((choice) => choice.selected)}
-                preview={true}
-                broadcast={null}
-                onSave={null}
-              />
+              <details>
+                <summary style={{ display: "flex" }}>
+                  <h3>{sub.created_by}</h3>
+                </summary>
+                <ChoiceList
+                  id={list.id}
+                  choices={sub.choices.filter((choice) => choice.selected)}
+                  preview={true}
+                  broadcast={null}
+                  onSave={null}
+                />
+              </details>
             </div>
           );
         })}
