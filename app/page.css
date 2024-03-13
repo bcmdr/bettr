@@ -1,9 +1,9 @@
 .topic {
   box-shadow: 0px 0px 25px 5px rgba(0, 0, 0, 0.05);
   max-width: 720px;
-  width: 95vw;
+  width: 100vw;
   background: white;
-  margin: 2rem 0rem;
+  margin: 0.5rem 0rem;
   border-radius: 0.5rem;
 }
 
@@ -19,7 +19,7 @@
   align-items: center;
   justify-content: flex-start;
   gap: 1rem;
-  border-radius: 0.5rem 0.5rem 0rem 0rem;
+  border-radius: 0.5rem;
 }
 
 .header > *:last-child {
@@ -37,7 +37,7 @@ summary.header {
 }
 
 details[open] summary {
-  border-radius: 0.5rem 0.5rem 0rem 0rem;
+  border-radius: 0.5rem;
   @apply bg-cyan-700 text-white;
 }
 
@@ -106,4 +106,8 @@ details {
 
 details summary::-webkit-details-marker {
   display:none;
+}
+
+body {
+  padding-top: 2rem;
 }

@@ -17,12 +17,8 @@ export default async function Lists() {
   return (
     <>
       <section className="p-3 mt-3 text-center">
-        <h1 className="font-bold text-xl"></h1>
-        <p>
-          Select a List. Choose Items.
-          <br />
-          Rank Your Choices.
-        </p>
+        <h1 className="font-bold text-xl">QuibList</h1>
+        <p>Choose Items. Rank Your Choices.</p>
       </section>
       <section>
         <ul className="list-topics">
