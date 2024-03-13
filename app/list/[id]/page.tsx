@@ -3,7 +3,7 @@
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ChoiceList from "@/components/ChoiceList";
 import "../../page.css";
 
@@ -21,6 +21,15 @@ interface Choice {
   rank: number;
 }
 
+interface Sub {
+  created_by: string;
+  list_id: string;
+  choices: Choice[];
+  name_tag: string;
+  tag: string;
+  votes: number;
+}
+
 export default function ListById() {
   const params = useParams();
   const idToSearch = params.id;
@@ -31,7 +40,10 @@ export default function ListById() {
     choices: [],
   });
   const [choices, setChoices] = useState<Choice[]>([]);
-  const [choicesToSubmit, setChoicesToSubmit] = useState<Choice[]>([]);
+  const choicesToSubmit = useRef<Choice[]>([]);
+  const [subs, setSubs] = useState<Sub[]>([]);
+  const [tag, setTag] = useState("");
+
   const supabase = createClient();
 
   useEffect(() => {
@@ -49,11 +61,13 @@ export default function ListById() {
 
     const getSubs = async () => {
       if (!window.location.hash) return;
+      setTag(window.location.hash);
       const { data } = await supabase
         .from("subs")
         .select()
         .eq("tag", window.location.hash);
       console.log(data);
+      setSubs(data as Sub[]);
     };
 
     getSubs();
@@ -61,37 +75,43 @@ export default function ListById() {
 
   const handleSubmit = async () => {
     if (!list.id) return;
-    if (choicesToSubmit.length <= 0) return;
-    let tag = prompt("Leaderboard Tag?")?.trim();
+    if (!choicesToSubmit.current) return;
+    let tagToSubmit = tag || `#${prompt("Leaderboard Tag?")?.trim()}`;
     let name = prompt("Username?")?.trim();
 
-    if (tag && tag?.length <= 0) return;
-    if (name && name?.length <= 0) console.log(choicesToSubmit);
+    if (!tagToSubmit || !name) return;
 
-    const { error } = await supabase.from("subs").insert({
+    console.log(choicesToSubmit.current);
+
+    const subToInsert = {
       created_by: name,
       list_id: list.id,
-      choices: choices,
-      name_tag: name + "_" + tag,
-      tag: `#${tag}`,
+      choices: choicesToSubmit.current,
+      name_tag: name + "_" + tagToSubmit,
+      tag: `${tagToSubmit}`,
       votes: 1,
-    });
-  };
+    };
 
-  const moveItem = (index: number, direction: string) => {
-    const newChoices = [...choices];
-    // Swap the movie at the current index with the movie at the new index
-    const newIndex = direction === "up" ? index - 1 : index + 1;
-    if (newIndex >= 0 && newIndex < choices.length) {
-      const temp = newChoices[index];
-      newChoices[index] = newChoices[newIndex];
-      newChoices[newIndex] = temp;
-      setChoices(newChoices); // Update the state with the new array of movies
+    const { error } = await supabase.from("subs").insert(subToInsert);
+
+    setSubs([...subs, subToInsert]);
+
+    if (error) {
+      console.error(error);
+      if (error.code === "23505") {
+        alert(
+          "Score for this user and tag already exists, please submit with a different username"
+        );
+      }
     }
   };
 
   const handleSave = (choices: Choice[]) => {
-    setChoicesToSubmit(choices);
+    choicesToSubmit.current = choices;
+  };
+
+  const onBroadcast = (choices: Choice[]) => {
+    choicesToSubmit.current = choices;
   };
 
   return (
@@ -104,10 +124,18 @@ export default function ListById() {
             </Link>
             <div>
               <h2>{list.title}</h2>
-              <p className="text-sm">{list.description}</p>
+              <div className="text-sm">
+                {subs.map((sub, index) => {
+                  return (
+                    <span className="sub" key={index}>
+                      {sub.created_by}
+                    </span>
+                  );
+                }) || list.description}
+              </div>
             </div>
             <button
-              className="btn"
+              className="btn text-sm"
               onClick={() => {
                 handleSubmit();
               }}
@@ -125,10 +153,28 @@ export default function ListById() {
                 selected: false,
               };
             })}
+            preview={false}
+            broadcast={onBroadcast}
             onSave={handleSave}
           />
         </div>
       )}
+      <div className="sub-list">
+        {subs.map((sub, index) => {
+          return (
+            <div key={index}>
+              <h3>{sub.created_by}</h3>
+              <ChoiceList
+                id={list.id}
+                choices={sub.choices.filter((choice) => choice.selected)}
+                preview={true}
+                broadcast={null}
+                onSave={null}
+              />
+            </div>
+          );
+        })}
+      </div>
     </>
   );
 }

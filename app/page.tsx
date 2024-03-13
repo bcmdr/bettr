@@ -44,7 +44,10 @@ export default async function Lists() {
                   </summary>
 
                   <ChoiceList
+                    onSave={null}
+                    broadcast={null}
                     id={id}
+                    preview={false}
                     choices={choices.map((choice: Choice) => {
                       return {
                         title: choice.title,

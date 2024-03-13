@@ -13,26 +13,32 @@ interface Choice {
 interface Props {
   choices: Choice[];
   id: string;
-  onSave: Function;
+  onSave: Function | null;
+  broadcast: Function | null;
+  preview: boolean;
 }
 
 const ChoiceList = (props: Props) => {
   const [choices, setChoices] = useState(props.choices);
 
   useEffect(() => {
+    if (props.preview) return; // don't load preview lists
     const localChoices =
       typeof window !== undefined && window?.localStorage?.getItem(props.id)
         ? JSON.parse(localStorage.getItem(props.id) || "")
         : props.choices;
     setChoices(localChoices);
+    props.broadcast?.(choices);
   }, [props.choices]);
 
   const saveList = () => {
-    props.onSave(choices);
+    if (props.preview) return; // don't save preview lists
+    props.onSave?.(choices);
     localStorage.setItem(props.id, JSON.stringify(choices));
   };
 
   const toggleSelect = (index: number) => {
+    if (props.preview) return; // don't select preview lists
     const newChoices = [...choices];
     // if (
     //   !newChoices[index].selected === false
@@ -46,16 +52,18 @@ const ChoiceList = (props: Props) => {
   };
 
   const moveRank = (index: number, direction: "up" | "down") => {
+    if (props.preview) return; // don't move preview lists
     const newChoices = [...choices];
     const currentRank = newChoices[index].rank;
     if (direction === "up") {
-      let swap = newChoices.find((movie) => movie.rank === currentRank - 1);
+      let swap = newChoices.find((choice) => choice.rank === currentRank - 1);
       if (!swap) return;
       swap.rank++;
       newChoices[index].rank--;
     } else if (direction === "down") {
-      let swap = newChoices.find((movie) => movie.rank === currentRank + 1);
-      if (!swap) return;
+      let swap = newChoices.find((choice) => choice.rank === currentRank + 1);
+      if (!swap || swap.rank === -1) return;
+      console.log(swap);
       swap.rank--;
       newChoices[index].rank++;
     }
@@ -64,6 +72,7 @@ const ChoiceList = (props: Props) => {
   };
 
   const updateRanks = () => {
+    if (props.preview) return; // don't update preview lists
     const selected = choices.filter((choice) => choice.selected);
     const unselected = choices.filter((choice) => !choice.selected);
     let rank = 1;
@@ -73,6 +82,8 @@ const ChoiceList = (props: Props) => {
     });
     setChoices([...updatedChoices, ...unselected]);
   };
+
+  console.log(choices);
 
   return (
     <div>
@@ -94,26 +105,27 @@ const ChoiceList = (props: Props) => {
                 {choice.title}
                 {choice.year && ` (${choice.year})`}
               </span>
-              {choice.selected ? (
-                <div className="options">
-                  <button
-                    className={`btn`}
-                    onClick={() => moveRank(index, "up")}
-                  >
-                    Better
-                  </button>
-                  <button
-                    className="btn"
-                    onClick={() => moveRank(index, "down")}
-                  >
-                    Worse
-                  </button>
-                </div>
-              ) : (
-                <div onClick={() => toggleSelect(index)} className="select">
-                  Select
-                </div>
-              )}
+              {!props.preview &&
+                (choice.selected ? (
+                  <div className="options">
+                    <button
+                      className={`btn`}
+                      onClick={() => moveRank(index, "up")}
+                    >
+                      Better
+                    </button>
+                    <button
+                      className="btn"
+                      onClick={() => moveRank(index, "down")}
+                    >
+                      Worse
+                    </button>
+                  </div>
+                ) : (
+                  <div onClick={() => toggleSelect(index)} className="select">
+                    Select
+                  </div>
+                ))}
             </li>
           ))}
       </ul>

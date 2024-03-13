@@ -45,3 +45,37 @@ details[open] summary {
 .header:not(summary) {
   @apply text-white bg-cyan-700;
 }
+
+.sub-list {
+  margin: 2rem 1rem;
+  padding-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-around;
+  @apply border-t border-t-cyan-700;
+}
+
+
+.sub {
+  cursor: pointer;
+}
+
+.sub:hover {
+  text-decoration: underline;
+}
+
+.sub:not(:last-child)::after {
+  content: ',';
+  margin-right: 0.25rem
+}
+
+h3 {
+  @apply rounded text-white text-cyan-700 text-xl;
+  font-weight: bold;
+  margin: 0.5rem 1rem;
+  background: inherit;
+}
+
+.sub-list li {
+  margin: 0px;
+}
