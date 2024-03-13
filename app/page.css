@@ -47,12 +47,18 @@ details[open] summary {
 }
 
 .sub-list {
-  margin: 2rem 1rem;
+  flex: 1;
+  margin: 3rem 1rem;
   padding-top: 2rem;
   display: flex;
   gap: 1rem;
-  justify-content: space-around;
+  justify-content: center;
   @apply border-t border-t-cyan-700;
+  flex-wrap: wrap;
+}
+
+.sub-list > div {
+  max-width: 240px;
 }
 
 

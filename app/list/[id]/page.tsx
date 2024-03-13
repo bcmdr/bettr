@@ -65,7 +65,8 @@ export default function ListById() {
       const { data } = await supabase
         .from("subs")
         .select()
-        .eq("tag", window.location.hash);
+        .eq("tag", window.location.hash)
+        .eq("list_id", idToSearch);
       console.log(data);
       setSubs(data as Sub[]);
     };
@@ -123,16 +124,10 @@ export default function ListById() {
               &larr; Back
             </Link>
             <div>
-              <h2>{list.title}</h2>
-              <div className="text-sm">
-                {subs.map((sub, index) => {
-                  return (
-                    <span className="sub" key={index}>
-                      {sub.created_by}
-                    </span>
-                  );
-                }) || list.description}
-              </div>
+              <h2>
+                {list.title} <span> {tag}</span>
+              </h2>
+              <div className="text-sm">{list.description}</div>
             </div>
             <button
               className="btn text-sm"
@@ -160,7 +155,7 @@ export default function ListById() {
         </div>
       )}
       <div className="sub-list">
-        {subs.map((sub, index) => {
+        {subs?.map((sub, index) => {
           return (
             <div key={index}>
               <h3>{sub.created_by}</h3>
