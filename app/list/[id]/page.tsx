@@ -75,8 +75,8 @@ export default function ListById() {
   const handleSubmit = async () => {
     if (!list.id) return;
     if (!choicesToSubmit.current) return;
-    let tagToSubmit = tag || `#${prompt("Leaderboard Tag?")?.trim()}`;
-    let name = prompt("Username?")?.trim();
+    let tagToSubmit = tag || `#${prompt("Leaderboard #")?.trim()}`;
+    let name = prompt("What's Your Name?")?.trim();
 
     if (!tagToSubmit || !name) return;
 
