@@ -80,7 +80,7 @@ export default function ListById() {
     };
 
     getList();
-    getSubs();
+    getSubs("");
   }, []);
 
   // Get a new searchParams string by merging the current
