@@ -148,7 +148,7 @@ export default function ListById() {
 
   return (
     <>
-      <section className="p-3 mt-3 text-center">
+      <section className="p-3 mt-3 text-center mb-3">
         <h1
           onClick={() => {
             let tagToSet = `${askTag()}`;
