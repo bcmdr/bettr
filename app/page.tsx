@@ -20,7 +20,7 @@ export default async function Lists() {
         <h1 className="font-bold text-xl">Topics</h1>
         <p>Rank Your Choices</p>
       </section>
-      <section>
+      <section className="w-full m-auto">
         <ul className="list-topics">
           {lists
             ?.sort((a, b) =>

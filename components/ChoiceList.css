@@ -7,6 +7,10 @@
   margin: 0.5rem 0.5rem;
 }
 
+.choice:first-child {
+  padding-top: 1rem;
+}
+
 .choice:last-child {
   padding-bottom: 1rem;
 }
@@ -16,17 +20,13 @@
 }
 
 .selected {
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   padding-top: 0rem;
   font-weight: bold;
 }
 
 .selected:first-child {
    padding-top: 1rem;
-}
-
-.choice:not(.selected) {
-  margin: 0.5rem 0.5rem;
 }
 
 .options {

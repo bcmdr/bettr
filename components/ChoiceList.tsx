@@ -110,13 +110,13 @@ const ChoiceList = (props: Props) => {
                       className={`btn`}
                       onClick={() => moveRank(index, "up")}
                     >
-                      Better
+                      &uarr;
                     </button>
                     <button
                       className="btn"
                       onClick={() => moveRank(index, "down")}
                     >
-                      Worse
+                      &darr;
                     </button>
                   </div>
                 ) : (
