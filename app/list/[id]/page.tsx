@@ -96,7 +96,8 @@ export default function ListById() {
   );
 
   const askTag = () =>
-    prompt("Leaderboard Tag (#)")?.trim().replace(/^#+/, "") || "";
+    prompt("Leaderboard Tag (#)")?.trim().replace(/^#+/, "").toLowerCase() ||
+    "";
 
   const handleSubmit = async () => {
     if (!list.id) return;
