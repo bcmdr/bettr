@@ -3,8 +3,11 @@
   max-width: 720px;
   width: 100vw;
   background: white;
-  margin: 0.5rem 0rem;
-  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+main .topic:first-child:not(details) {
+  margin-top: 3rem;
 }
 
 .topic[open] {
@@ -13,13 +16,16 @@
 
 .header {
   color: black;
-  @apply sticky top-0;
+  @apply z-0 top-9 sticky shadow-sm;
   padding: 1rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 1rem;
-  border-radius: 0.5rem;
+}
+
+.sub-list .header {
+  color: white;
 }
 
 .header > *:last-child {
@@ -37,8 +43,11 @@ summary.header {
 }
 
 details[open] summary {
-  border-radius: 0.5rem;
-  @apply bg-cyan-700 text-white;
+  @apply bg-cyan-700 text-white sticky top-9;
+}
+
+details[open] summary .description {
+  display: none;
 }
 
 .header:not(summary) {
@@ -58,7 +67,7 @@ details[open] summary {
 
 .sub-list > div {
   flex-shrink: 1;
-  flex-grow: 1;
+  flex-grow: 0;
   display: flex;
   flex-direction: column;
 }
@@ -78,7 +87,7 @@ details[open] summary {
 }
 
 h3 {
-  @apply rounded text-cyan-700 text-xl;
+  @apply text-xl text-cyan-700;
   font-weight: bold;
   margin: 0.5rem 1rem;
   background: inherit;
@@ -108,6 +117,6 @@ details summary::-webkit-details-marker {
   display:none;
 }
 
-body {
-  padding-top: 2rem;
+ul, li {
+  margin: 0;
 }

@@ -1,4 +1,5 @@
 import "./globals.css";
+import Link from "next/link";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -7,7 +8,7 @@ const defaultUrl = process.env.VERCEL_URL
 export const metadata = {
   metadataBase: new URL(defaultUrl),
   title: "QuibList – Rank the Best",
-  description: "Choose Your Favourite Items From These Lists",
+  description: "Select a List. Rank Your Choices.",
 };
 
 export default function RootLayout({
@@ -17,8 +18,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-background text-foreground">
-        <main className="min-h-screen flex flex-col items-center justify-center">
+      <body className="">
+        <header className="bg-cyan-950 font-bold shadow text-white p-2 sticky top-0 z-10 flex items-center m-0">
+          <Link className="text-sm" href="/">
+            QuibList
+          </Link>
+        </header>
+        <main className="flex flex-col items-center justify-center">
           {children}
         </main>
       </body>

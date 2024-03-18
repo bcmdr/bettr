@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import Link from "next/link";
+
 import { useParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import ChoiceList from "@/components/ChoiceList";
@@ -120,23 +120,21 @@ export default function ListById() {
       {list.choices.length > 0 && (
         <div className="topic">
           <header className="header">
-            <Link className="text-sm" href="/">
-              &larr; Back
-            </Link>
             <div>
-              <h2>
-                {list.title} <span> {tag}</span>
-              </h2>
-              <div className="text-sm">{list.description}</div>
+              <h2>{list.title}</h2>
+              {/* <div className="text-sm">{list.description}</div> */}
             </div>
-            <button
-              className="btn text-sm"
-              onClick={() => {
-                handleSubmit();
-              }}
-            >
-              Submit
-            </button>
+            <div>
+              <span className="p-1 px-2 mr-2 text-sm font-bold"> {tag}</span>
+              <button
+                className="border border-white p-1 px-2 text-sm"
+                onClick={() => {
+                  handleSubmit();
+                }}
+              >
+                Submit
+              </button>
+            </div>
           </header>
           <ChoiceList
             id={list.id}
@@ -158,10 +156,8 @@ export default function ListById() {
         {subs?.map((sub, index) => {
           return (
             <div key={index}>
-              <details>
-                <summary style={{ display: "flex" }}>
-                  <h3>{sub.created_by}</h3>
-                </summary>
+              <div>
+                <h3>{sub.created_by}</h3>
                 <ChoiceList
                   id={list.id}
                   choices={sub.choices.filter((choice) => choice.selected)}
@@ -169,7 +165,7 @@ export default function ListById() {
                   broadcast={null}
                   onSave={null}
                 />
-              </details>
+              </div>
             </div>
           );
         })}

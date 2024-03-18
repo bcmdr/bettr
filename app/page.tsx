@@ -17,8 +17,8 @@ export default async function Lists() {
   return (
     <>
       <section className="p-3 mt-3 text-center">
-        <h1 className="font-bold text-xl">QuibList</h1>
-        <p>Choose Items. Rank Your Choices.</p>
+        <h1 className="font-bold text-xl">Topics</h1>
+        <p>Rank Your Choices</p>
       </section>
       <section>
         <ul className="list-topics">
@@ -32,7 +32,7 @@ export default async function Lists() {
                   <summary className="header" key={id}>
                     <div>
                       <h2>{title}</h2>
-                      <p>{"" + description}</p>
+                      <p className="description">{"" + description}</p>
                     </div>
                     <div>
                       <Link href={`/list/${id}`}>Go &rarr;</Link>
