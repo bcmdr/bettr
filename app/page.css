@@ -1,7 +1,7 @@
 .topic {
   box-shadow: 0px 0px 25px 5px rgba(0, 0, 0, 0.05);
   max-width: 720px;
-  width: 100vw;
+  width: 100%;
   background: white;
   margin-bottom: 1rem;
 }
@@ -19,7 +19,7 @@ main .topic:first-child:not(details) {
 .header {
   color: black;
   @apply z-0 top-9 sticky shadow-sm;
-  padding: 1rem 1.5rem;
+  padding: 1rem 1rem;
   display: flex;
   align-items: center;
   justify-content: flex-start;
