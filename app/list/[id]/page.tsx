@@ -103,7 +103,7 @@ export default function ListById() {
     if (!list.id) return;
     if (!choicesToSubmit.current) return;
     let searchTag = search.get("tag");
-    let tagToSubmit = searchTag ? searchTag : askTag();
+    let tagToSubmit = searchTag || "";
     if (tagToSubmit.length == 0) tagToSubmit = "global";
 
     let localName = window.localStorage.getItem("username");
@@ -122,6 +122,8 @@ export default function ListById() {
       tag: `${tagToSubmit.toLowerCase()}`,
       votes: 1,
     };
+
+    if (!confirm(`Submit to ${tagToSubmit} as ${nameToSubmit}?`)) return;
 
     const { error } = await supabase.from("subs").insert(subToInsert);
 
