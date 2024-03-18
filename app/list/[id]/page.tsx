@@ -2,8 +2,13 @@
 
 import { createClient } from "@/utils/supabase/client";
 
-import { useParams } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import {
+  useParams,
+  useSearchParams,
+  usePathname,
+  useRouter,
+} from "next/navigation";
+import { useEffect, useState, useRef, useCallback } from "react";
 import ChoiceList from "@/components/ChoiceList";
 import "../../page.css";
 
@@ -30,7 +35,10 @@ interface Sub {
 }
 
 export default function ListById() {
+  const pathname = usePathname();
+  const router = useRouter();
   const params = useParams();
+  const search = useSearchParams();
   const idToSearch = params.id;
   const [list, setList] = useState<List>({
     id: "",
@@ -41,20 +49,23 @@ export default function ListById() {
   const [choices, setChoices] = useState<Choice[]>([]);
   const choicesToSubmit = useRef<Choice[]>([]);
   const [subs, setSubs] = useState<Sub[]>([]);
-  const [tag, setTag] = useState("");
+  const [loadingSubs, setLoadingSubs] = useState(true);
+  const [tag, setTag] = useState(search.get("tag") || "global");
 
   const supabase = createClient();
 
-  const getSubs = async () => {
-    if (!window.location.hash) return;
-    setTag(window.location.hash);
+  const getSubs = async (subTag: string) => {
+    // if (!window.location.hash) return;
+    setLoadingSubs(true);
+    let tagToSearch = subTag ? subTag : tag;
     const { data } = await supabase
       .from("subs")
       .select()
-      .eq("tag", window.location.hash)
+      .eq("tag", tagToSearch)
       .eq("list_id", idToSearch);
     console.log(data);
     setSubs(data as Sub[]);
+    setLoadingSubs(false);
   };
 
   useEffect(() => {
@@ -72,21 +83,42 @@ export default function ListById() {
     getSubs();
   }, []);
 
+  // Get a new searchParams string by merging the current
+  // searchParams with a provided key/value pair
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(search.toString());
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [search]
+  );
+
+  const askTag = () =>
+    prompt("Leaderboard Tag (#)")?.trim().replace(/^#+/, "") || "";
+
   const handleSubmit = async () => {
     if (!list.id) return;
     if (!choicesToSubmit.current) return;
-    let tagToSubmit = tag || `#${prompt("Leaderboard #")?.trim()}`;
-    let name = prompt("What's Your Name?")?.trim();
+    let searchTag = search.get("tag");
+    let tagToSubmit = searchTag ? searchTag : askTag();
+    if (tagToSubmit.length == 0) tagToSubmit = "global";
 
-    if (!tagToSubmit || !name) return;
+    let localName = window.localStorage.getItem("username");
+
+    let nameToSubmit = localName
+      ? localName
+      : prompt(`Submitting To ${tagToSubmit}. Your Name:`)?.trim();
+    if (!nameToSubmit) return;
 
     console.log(choicesToSubmit.current);
 
     const subToInsert = {
-      created_by: name,
+      created_by: nameToSubmit,
       list_id: list.id,
       choices: choicesToSubmit.current,
-      tag: `${tagToSubmit}`,
+      tag: `${tagToSubmit.toLowerCase()}`,
       votes: 1,
     };
 
@@ -94,17 +126,16 @@ export default function ListById() {
 
     if (error) {
       console.error(error);
-      if (error.code === "23505") {
-        alert(
-          "Score for this user and tag already exists, please submit with a different username"
-        );
-      }
+      // if (error.code === "23505") {
+      //   alert(
+      //     "Score for this user and tag already exists, please submit with a different username"
+      //   );
+      // }
       return;
     }
-
+    router.push(pathname + "?" + createQueryString("tag", tagToSubmit));
     setSubs([...subs, subToInsert]);
     setTag(tagToSubmit);
-    window.location.hash = tagToSubmit;
   };
 
   const handleSave = (choices: Choice[]) => {
@@ -117,7 +148,32 @@ export default function ListById() {
 
   return (
     <>
-      {list.choices.length > 0 && (
+      <section className="p-3 mt-3 text-center">
+        <h1
+          onClick={() => {
+            let tagToSet = `${askTag()}`;
+            if (tagToSet.length == 0) return;
+            router.push(pathname + "?" + createQueryString("tag", tagToSet));
+            setTag(tagToSet);
+            getSubs(tagToSet);
+          }}
+          className="font-bold text-xl"
+        >
+          {tag}
+        </h1>
+        {loadingSubs ? (
+          <p className="text-sm">...</p>
+        ) : (
+          <p className="text-sm">{subs?.length || "0"} Submissions</p>
+        )}
+      </section>
+      {list.choices.length == 0 ? (
+        <>
+          <div className="topic">
+            <header className="header font-bold text-lg">...</header>
+          </div>
+        </>
+      ) : (
         <div className="topic">
           <header className="header">
             <div>
@@ -125,7 +181,7 @@ export default function ListById() {
               {/* <div className="text-sm">{list.description}</div> */}
             </div>
             <div>
-              <span className="p-1 px-2 mr-2 text-sm font-bold"> {tag}</span>
+              {/* <span className="p-1 px-2 mr-2 text-sm"> {tag}</span> */}
               <button
                 className="border border-white p-1 px-2 text-sm"
                 onClick={() => {
@@ -152,7 +208,7 @@ export default function ListById() {
           />
         </div>
       )}
-      <div className="sub-list">
+      <div id="submissions" className="sub-list">
         {subs?.map((sub, index) => {
           return (
             <div key={index}>

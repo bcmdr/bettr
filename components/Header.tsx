@@ -1,44 +1,33 @@
-import NextLogo from "./NextLogo";
-import SupabaseLogo from "./SupabaseLogo";
-
+"use client";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 export default function Header() {
+  const [name, setName] = useState<string>("");
+  const [loadingName, setLoadingName] = useState(true);
+  useEffect(() => {
+    const localName =
+      typeof window !== undefined && window?.localStorage?.getItem("username")
+        ? localStorage?.getItem("username")
+        : "";
+    setName(localName ? localName : "");
+    setLoadingName(false);
+  }, []);
   return (
-    <div className="flex flex-col gap-16 items-center">
-      <div className="flex gap-8 justify-center items-center">
-        <a
-          href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <SupabaseLogo />
-        </a>
-        <span className="border-l rotate-45 h-6" />
-        <a href="https://nextjs.org/" target="_blank" rel="noreferrer">
-          <NextLogo />
-        </a>
+    <header className="bg-cyan-950 font-bold shadow text-white p-2 px-3 sticky top-0 z-10 flex items-center justify-between m-0">
+      <Link className="text-sm" href="/">
+        QuibList
+      </Link>
+      <div
+        onClick={() => {
+          let nameToSet = prompt("Name");
+          if (!nameToSet) return;
+          setName(nameToSet);
+          window.localStorage.setItem("username", nameToSet);
+        }}
+        className="font-normal text-xs"
+      >
+        {loadingName ? `` : name ? name : `Sign In`}
       </div>
-      <h1 className="sr-only">Supabase and Next.js Starter Template</h1>
-      <p className="text-3xl lg:text-4xl !leading-tight mx-auto max-w-xl text-center">
-        The fastest way to build apps with{" "}
-        <a
-          href="https://supabase.com/?utm_source=create-next-app&utm_medium=template&utm_term=nextjs"
-          target="_blank"
-          className="font-bold hover:underline"
-          rel="noreferrer"
-        >
-          Supabase
-        </a>{" "}
-        and{" "}
-        <a
-          href="https://nextjs.org/"
-          target="_blank"
-          className="font-bold hover:underline"
-          rel="noreferrer"
-        >
-          Next.js
-        </a>
-      </p>
-      <div className="w-full p-[1px] bg-gradient-to-r from-transparent via-foreground/10 to-transparent my-8" />
-    </div>
+    </header>
   );
 }

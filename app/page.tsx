@@ -16,7 +16,7 @@ export default async function Lists() {
   console.log(lists);
   return (
     <>
-      <section className="p-3 mt-3 text-center">
+      <section className="p-3 mt-3 text-center mb-3">
         <h1 className="font-bold text-xl">Topics</h1>
         <p>Rank Your Choices</p>
       </section>

@@ -83,8 +83,6 @@ const ChoiceList = (props: Props) => {
     setChoices([...updatedChoices, ...unselected]);
   };
 
-  console.log(choices);
-
   return (
     <div>
       <ul>

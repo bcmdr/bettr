@@ -1,5 +1,6 @@
 import "./globals.css";
 import Link from "next/link";
+import Header from "@/components/Header";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -19,11 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="">
-        <header className="bg-cyan-950 font-bold shadow text-white p-2 sticky top-0 z-10 flex items-center m-0">
-          <Link className="text-sm" href="/">
-            QuibList
-          </Link>
-        </header>
+        <Header></Header>
         <main className="flex flex-col items-center justify-center">
           {children}
         </main>

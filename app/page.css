@@ -6,13 +6,15 @@
   margin-bottom: 1rem;
 }
 
+/* @media (min-width: 720px) {
 main .topic:first-child:not(details) {
   margin-top: 3rem;
 }
+} */
 
-.topic[open] {
+/* .topic[open] {
   margin: 1rem 0rem;
-}
+} */
 
 .header {
   color: black;
