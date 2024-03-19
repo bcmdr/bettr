@@ -103,7 +103,7 @@ export default function ListById() {
 
   const handleSubmit = async () => {
     if (!list.id) return;
-    if (!choicesToSubmit.current) return;
+    if (choicesToSubmit.current.length == 0) return;
     let searchTag = search.get("tag");
     let tagToSubmit = searchTag || "";
     if (tagToSubmit.length == 0) {

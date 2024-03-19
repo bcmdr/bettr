@@ -35,7 +35,7 @@ export default async function Lists() {
                       <p className="description">{"" + description}</p>
                     </div>
                     <div>
-                      <Link href={`/list/${id}`}>Go &rarr;</Link>
+                      <Link href={`/list/${id}`}>Submit &rarr;</Link>
                     </div>
                   </summary>
 
