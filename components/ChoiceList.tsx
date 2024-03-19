@@ -102,13 +102,25 @@ const ChoiceList = (props: Props) => {
       choice.rank = rank++;
       return choice;
     });
-    setChoices([...updatedChoices, ...unselected]);
+    const updatedUnselected = unselected.map((choice) => {
+      choice.rank = -1;
+      return choice;
+    });
+    setChoices([...updatedChoices, ...updatedUnselected]);
   };
 
   return (
     <div>
       <ul>
         {choices
+          .sort((a, b) => {
+            let ar = subRanks?.find((rank) => rank.title === a.title)?.rank;
+            let br = subRanks?.find((rank) => rank.title === b.title)?.rank;
+            if (!ar) ar = Infinity;
+            if (!br) br = Infinity;
+            if (br && ar) return ar - br;
+            return 0;
+          })
           .sort((a, b) => {
             return b.rank - a.rank;
           })

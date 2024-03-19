@@ -70,8 +70,11 @@ export default function ListById() {
     console.log(data);
     setSubs(data as Sub[]);
     setLoadingSubs(false);
-    if (!data) return;
-    const maxPoints = data[0].choices.length;
+    if (!data?.[0]) {
+      rankCounts.current = new Map<string, number>();
+      return;
+    }
+    const maxPoints = data?.[0].choices.length;
     rankCounts.current = new Map<string, number>();
     data?.forEach((sub) => {
       sub.choices.forEach((choice: Choice) => {
@@ -118,7 +121,8 @@ export default function ListById() {
 
   const handleSubmit = async () => {
     if (!list.id) return;
-    if (choicesToSubmit.current.length == 0) return;
+    if (!choicesToSubmit.current.some((item) => item.selected))
+      return alert("Select choices to add to your submission.");
     let searchTag = search.get("tag");
     let tagToSubmit = searchTag || "";
     if (tagToSubmit.length == 0) {
@@ -184,14 +188,19 @@ export default function ListById() {
               setTag(tagToSet);
               getSubs(tagToSet);
             }}
-            className="font-bold text-xl"
+            className="font-bold text-xl hover:underline hover:cursor-pointer"
           >
             {tag}
           </h1>
           {loadingSubs ? (
             <p className="text-sm">...</p>
           ) : (
-            <p className="text-sm">{subs?.length || "0"} Submissions</p>
+            <p className="text-sm text-cyan-700">
+              <a href="#submissions" className="hover:underline">
+                {" "}
+                {subs?.length || "0"} Submissions
+              </a>
+            </p>
           )}
         </section>
       ) : (
