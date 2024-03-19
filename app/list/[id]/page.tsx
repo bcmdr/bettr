@@ -53,6 +53,8 @@ export default function ListById() {
   const [subs, setSubs] = useState<Sub[]>([]);
   const [loadingSubs, setLoadingSubs] = useState(true);
   const [tag, setTag] = useState(searchTag ? searchTag : null);
+  const rankCounts = useRef<Map<string, number>>(new Map<string, number>());
+  const voteCounts = useRef<Map<string, number>>(new Map<string, number>());
 
   const supabase = createClient();
 
@@ -68,6 +70,20 @@ export default function ListById() {
     console.log(data);
     setSubs(data as Sub[]);
     setLoadingSubs(false);
+    if (!data) return;
+    const maxPoints = data[0].choices.length;
+    rankCounts.current = new Map<string, number>();
+    data?.forEach((sub) => {
+      sub.choices.forEach((choice: Choice) => {
+        if (choice.selected == false) return;
+        let currentCounts = rankCounts.current.get(choice.title);
+        currentCounts = currentCounts ? currentCounts : 0;
+        rankCounts.current.set(
+          choice.title,
+          currentCounts + (maxPoints + 1 - choice.rank)
+        );
+      });
+    });
   };
 
   useEffect(() => {
@@ -98,8 +114,7 @@ export default function ListById() {
   );
 
   const askTag = () =>
-    prompt("Leaderboard Tag (#)")?.trim().replace(/^#+/, "").toLowerCase() ||
-    "";
+    prompt("Leaderboard Tag")?.trim().replace(/^#+/, "").toLowerCase() || "";
 
   const handleSubmit = async () => {
     if (!list.id) return;
@@ -143,8 +158,8 @@ export default function ListById() {
       return;
     }
     router.replace(pathname + "?" + createQueryString("tag", tagToSubmit));
-    setSubs([...subs, subToInsert]);
     setTag(tagToSubmit);
+    getSubs(tagToSubmit);
   };
 
   const handleSave = (choices: Choice[]) => {
@@ -241,6 +256,7 @@ export default function ListById() {
             preview={false}
             broadcast={onBroadcast}
             onSave={handleSave}
+            counts={{ ranks: rankCounts.current, votes: voteCounts.current }}
           />
         </div>
       )}
@@ -257,6 +273,7 @@ export default function ListById() {
                     preview={true}
                     broadcast={null}
                     onSave={null}
+                    counts={null}
                   />
                 </div>
               </div>

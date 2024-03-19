@@ -10,16 +10,38 @@ interface Choice {
   rank: number;
 }
 
+interface Counts {
+  ranks: Map<string, number>;
+  votes: Map<string, number>;
+}
+
 interface Props {
   choices: Choice[];
   id: string;
   onSave: Function | null;
   broadcast: Function | null;
   preview: boolean;
+  counts: Counts | null;
 }
 
 const ChoiceList = (props: Props) => {
   const [choices, setChoices] = useState(props.choices);
+  const subRanks = props.counts
+    ? Array.from(props.counts.ranks)
+        .map(([key, value]) => {
+          return { title: key, points: value, rank: -1 };
+        })
+        .sort((a, b) => {
+          return b.points - a.points;
+        })
+    : null;
+  let position = 1;
+  subRanks?.forEach((item, index) => {
+    item.rank =
+      item.points >= subRanks[index + 1]?.points ? position : index + 1;
+    if (subRanks[index + 1]?.points < item.points) position = index + 2;
+  });
+  console.table(subRanks);
 
   useEffect(() => {
     if (props.preview) return; // don't load preview lists
@@ -101,7 +123,21 @@ const ChoiceList = (props: Props) => {
               <span className="title" onClick={() => toggleSelect(index)}>
                 {choice.selected && `${choice.rank}. `}
                 {choice.title}
-                {choice.year && ` (${choice.year})`}
+                <span className="text-gray-500">
+                  {choice.year && ` (${choice.year}) `}
+                </span>
+                {subRanks && (
+                  <span className="text-cyan-700 font-normal">
+                    {subRanks.findIndex(
+                      (rank) => rank.title === choice.title
+                    ) >= 0
+                      ? `[${
+                          subRanks.find((rank) => rank.title === choice.title)
+                            ?.rank
+                        }]`
+                      : ``}
+                  </span>
+                )}
               </span>
               {!props.preview &&
                 (choice.selected ? (

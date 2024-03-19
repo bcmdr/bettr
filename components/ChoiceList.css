@@ -32,6 +32,7 @@
 .options {
   flex-grow: 0;
   flex-shrink: 0;
+  margin-left: 2rem;
 }
 
 .select {
@@ -44,7 +45,7 @@
 }
 
 .options .btn {
-  @apply border border-black text-sm py-1 px-2;
+  @apply border border-black text-sm py-1 px-4;
   color: rgba(0,0,0,0.8);
 }
 

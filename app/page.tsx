@@ -44,6 +44,7 @@ export default async function Lists() {
                     broadcast={null}
                     id={id}
                     preview={false}
+                    counts={null}
                     choices={choices.map((choice: Choice) => {
                       return {
                         title: choice.title,
