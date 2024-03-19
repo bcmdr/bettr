@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin: 0rem;
 }
 
 .list-topics > li {
@@ -15,18 +16,18 @@
   max-width: 720px;
   width: 100%;
   background: white;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
-/* @media (min-width: 720px) {
+@media (min-width: 720px) {
 main .topic:first-child:not(details) {
   margin-top: 3rem;
 }
-} */
+}
 
-/* .topic[open] {
-  margin: 1rem 0rem;
-} */
+.topic[open] {
+  margin-bottom: 1rem;
+}
 
 .header {
   color: black;
@@ -70,34 +71,22 @@ details[open] summary .description {
 
 .sub-list {
   flex: 1;
-  margin: 3rem 1rem;
+  margin: 3rem 1rem 0rem 1rem;
   padding-top: 2rem;
   display: flex;
   gap: 1rem;
-  justify-content: center;
+  justify-content: flex-start;
   @apply border-t border-t-cyan-700;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
+  width: calc(100vw - 1rem);
+  overflow-x: scroll;
 }
 
 .sub-list > div {
-  flex-shrink: 1;
-  flex-grow: 0;
+  flex-shrink: 0;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-}
-
-
-.sub {
-  cursor: pointer;
-}
-
-.sub:hover {
-  text-decoration: underline;
-}
-
-.sub:not(:last-child)::after {
-  content: ',';
-  margin-right: 0.25rem
 }
 
 h3 {

@@ -8,6 +8,7 @@ import {
   usePathname,
   useRouter,
 } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useState, useRef, useCallback } from "react";
 import ChoiceList from "@/components/ChoiceList";
 import "../../page.css";
@@ -40,6 +41,7 @@ export default function ListById() {
   const params = useParams();
   const search = useSearchParams();
   const idToSearch = params.id;
+  const searchTag = search.get("tag");
   const [list, setList] = useState<List>({
     id: "",
     title: "",
@@ -50,7 +52,7 @@ export default function ListById() {
   const choicesToSubmit = useRef<Choice[]>([]);
   const [subs, setSubs] = useState<Sub[]>([]);
   const [loadingSubs, setLoadingSubs] = useState(true);
-  const [tag, setTag] = useState(search.get("tag") || "global");
+  const [tag, setTag] = useState(searchTag ? searchTag : null);
 
   const supabase = createClient();
 
@@ -81,7 +83,7 @@ export default function ListById() {
 
     getList();
     getSubs("");
-  }, []);
+  }, [tag]);
 
   // Get a new searchParams string by merging the current
   // searchParams with a provided key/value pair
@@ -104,10 +106,14 @@ export default function ListById() {
     if (!choicesToSubmit.current) return;
     let searchTag = search.get("tag");
     let tagToSubmit = searchTag || "";
-    if (tagToSubmit.length == 0) tagToSubmit = "global";
+    if (tagToSubmit.length == 0) {
+      let tagReceived = askTag();
+      if (!tagReceived) return;
+      tagToSubmit = tagReceived;
+    }
 
+    // Get Username
     let localName = window.localStorage.getItem("username");
-
     let nameToSubmit = localName
       ? localName
       : prompt(`Submitting To ${tagToSubmit}. Your Name:`)?.trim();
@@ -119,7 +125,7 @@ export default function ListById() {
       created_by: nameToSubmit,
       list_id: list.id,
       choices: choicesToSubmit.current,
-      tag: `${tagToSubmit.toLowerCase()}`,
+      tag: `${tagToSubmit}`,
       votes: 1,
     };
 
@@ -136,7 +142,7 @@ export default function ListById() {
       // }
       return;
     }
-    router.push(pathname + "?" + createQueryString("tag", tagToSubmit));
+    router.replace(pathname + "?" + createQueryString("tag", tagToSubmit));
     setSubs([...subs, subToInsert]);
     setTag(tagToSubmit);
   };
@@ -151,25 +157,51 @@ export default function ListById() {
 
   return (
     <>
-      <section className="p-3 mt-3 text-center mb-3">
-        <h1
-          onClick={() => {
-            let tagToSet = `${askTag()}`;
-            if (tagToSet.length == 0) return;
-            router.push(pathname + "?" + createQueryString("tag", tagToSet));
-            setTag(tagToSet);
-            getSubs(tagToSet);
-          }}
-          className="font-bold text-xl"
-        >
-          {tag}
-        </h1>
-        {loadingSubs ? (
-          <p className="text-sm">...</p>
-        ) : (
-          <p className="text-sm">{subs?.length || "0"} Submissions</p>
-        )}
-      </section>
+      {tag ? (
+        <section className="p-3 mt-3 text-center mb-3">
+          <h1
+            onClick={() => {
+              let tagToSet = `${askTag()}`;
+              if (tagToSet.length == 0) return;
+              router.replace(
+                pathname + "?" + createQueryString("tag", tagToSet)
+              );
+              setTag(tagToSet);
+              getSubs(tagToSet);
+            }}
+            className="font-bold text-xl"
+          >
+            {tag}
+          </h1>
+          {loadingSubs ? (
+            <p className="text-sm">...</p>
+          ) : (
+            <p className="text-sm">{subs?.length || "0"} Submissions</p>
+          )}
+        </section>
+      ) : (
+        <section className="p-3 mt-3 text-center mb-3">
+          <div
+            onClick={() => {
+              let tagToSet = `${askTag()}`;
+              if (tagToSet.length == 0) return;
+              router.replace(
+                pathname + "?" + createQueryString("tag", tagToSet)
+              );
+              setTag(tagToSet);
+              getSubs(tagToSet);
+            }}
+            className="font-bold text-xl hover:underline hover:cursor-pointer"
+          >
+            Join a Tag
+          </div>
+          {/* {loadingSubs ? (
+            <p className="text-sm">...</p>
+          ) : (
+            <p className="text-sm">{subs?.length || "0"} Submissions</p>
+          )} */}
+        </section>
+      )}
       {list.choices.length == 0 ? (
         <>
           <div className="topic">
@@ -179,7 +211,8 @@ export default function ListById() {
       ) : (
         <div className="topic">
           <header className="header">
-            <div>
+            <div className="flex gap-2 items-center">
+              <Link href="/">&larr;</Link>
               <h2>{list.title}</h2>
               {/* <div className="text-sm">{list.description}</div> */}
             </div>
@@ -211,24 +244,28 @@ export default function ListById() {
           />
         </div>
       )}
-      <div id="submissions" className="sub-list">
-        {subs?.map((sub, index) => {
-          return (
-            <div key={index}>
-              <div>
-                <h3>{sub.created_by}</h3>
-                <ChoiceList
-                  id={list.id}
-                  choices={sub.choices.filter((choice) => choice.selected)}
-                  preview={true}
-                  broadcast={null}
-                  onSave={null}
-                />
+      {!loadingSubs && subs.length > 0 ? (
+        <div id="submissions" className="sub-list">
+          {subs?.map((sub, index) => {
+            return (
+              <div key={index}>
+                <div>
+                  <h3>{sub.created_by}</h3>
+                  <ChoiceList
+                    id={list.id}
+                    choices={sub.choices.filter((choice) => choice.selected)}
+                    preview={true}
+                    broadcast={null}
+                    onSave={null}
+                  />
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div></div>
+      )}
     </>
   );
 }
