@@ -50,7 +50,7 @@ const ChoiceList = (props: Props) => {
         ? JSON.parse(localStorage.getItem(props.id) || "")
         : props.choices;
     setChoices(localChoices);
-    props.broadcast?.(choices);
+    props.broadcast?.(localChoices);
   }, [props.choices]);
 
   const saveList = () => {

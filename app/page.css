@@ -79,7 +79,7 @@ details[open] summary .description {
   @apply border-t border-t-cyan-700;
   /* flex-wrap: wrap; */
   width: calc(100vw - 1rem);
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 .sub-list > div {
